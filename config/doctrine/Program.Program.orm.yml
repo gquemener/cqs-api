@@ -1,0 +1,21 @@
+App\Acme\Domain\Program\Program:
+    type: entity
+
+    id:
+        id:
+            type: string
+            length: 36
+            generator:
+                strategy: NONE
+
+    fields:
+        description:
+            type: text
+        maxParticipants:
+            type: integer
+
+    oneToMany:
+        participants:
+            targetEntity: App\Acme\Domain\Program\Participant
+            mappedBy: program
+            cascade: [PERSIST]

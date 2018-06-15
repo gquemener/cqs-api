@@ -1,0 +1,19 @@
+program_index:
+    path: /
+    methods: GET
+    controller: App\Controller\Program::index
+
+program_show:
+    path: /{id}
+    methods: GET
+    controller: App\Controller\Program::show
+
+program_create:
+    path: /
+    methods: POST
+    controller: App\Controller\Program::create
+
+program_join:
+    path: /{id}/participants
+    methods: POST
+    controller: App\Controller\Program::join

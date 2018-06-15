@@ -1,0 +1,9 @@
+App\Acme\Domain\User\User:
+    type: entity
+
+    id:
+        id:
+            type: string
+            length: 36
+            generator:
+                strategy: NONE

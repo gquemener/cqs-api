@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+    web:
+        image: prooph/php:7.2-cli-xdebug
+        user: "$UID"
+        volumes:
+            - './:/data'
+        ports:
+            - '8080:8080'
+        working_dir: /data
+        command: php -S 0.0.0.0:8080 -t public
+
+    mysql:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: moovone
+            MYSQL_USER: moovone
+            MYSQL_PASSWORD: password
