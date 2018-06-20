@@ -42,7 +42,7 @@ final class SerializeJsonResponse implements EventSubscriberInterface
 
         if ($exception instanceof InvalidCommandException) {
             $event->setResponse(
-                $this->createJsonResponse($exception->violations(), 200)
+                $this->createJsonResponse($exception->violations(), 400)
             );
         }
     }
