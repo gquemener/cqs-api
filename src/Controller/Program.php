@@ -38,7 +38,7 @@ final class Program
 
         $command = ProposeProgram::withDescription(
             $request->request->get('description'),
-            (int) $request->request->get('maxParticipants'),
+            (int) $request->request->get('max_participants'),
             $programId->toString()
         );
 

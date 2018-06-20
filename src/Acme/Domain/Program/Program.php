@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Acme\Domain\Program;
 
-use App\Acme\Domain\User\User;
-use App\Acme\Domain\User\UserId;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\DomainEvent;
+use App\Acme\Domain\Program\Events;
+use App\Acme\Domain\User\User;
+use App\Acme\Domain\User\UserId;
 
-final class Program
+final class Program implements DomainEvent\Provider
 {
+    use DomainEvent\RecordEvents;
+
     private $id;
     private $description;
     private $maxParticipants;
@@ -22,6 +26,12 @@ final class Program
         $this->description = $description;
         $this->maxParticipants = $maxParticipants;
         $this->participants = new ArrayCollection();
+
+        $this->record(new Events\ProgramCreated([
+            'id' => $this->id,
+            'description' => $this->description,
+            'max_partipants' => $this->maxParticipants,
+        ]));
     }
 
     public function id(): ProgramId

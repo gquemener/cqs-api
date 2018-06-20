@@ -17,10 +17,11 @@ final class ProposeProgramHandler
     public function __invoke(ProposeProgram $command): void
     {
         $program = Domain\Program::propose(
-            Domain\ProgramId::fromString($command->programId()),
+            $command->programId(),
             $command->description(),
             $command->maxParticipants()
         );
+
         $this->repository->add($program);
     }
 }
