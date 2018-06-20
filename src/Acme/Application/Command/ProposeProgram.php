@@ -8,6 +8,8 @@ use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
 use App\Acme\Domain\Program as Domain;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class ProposeProgram extends Command implements PayloadConstructable
 {
@@ -35,5 +37,11 @@ final class ProposeProgram extends Command implements PayloadConstructable
     public function maxParticipants(): int
     {
         return $this->payload['max_participants'];
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addGetterMethodConstraint('description', 'description', new Assert\NotBlank());
+        $metadata->addGetterMethodConstraint('maxParticipants', 'maxParticipants', new Assert\GreaterThan(0));
     }
 }
