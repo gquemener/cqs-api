@@ -30,11 +30,10 @@ final class Program
 
         $command = ProposeProgram::withDescription(
             $request->request->get('description'),
-            (int) $request->request->get('max_participants'),
+            (int) $request->request->get('maxParticipants'),
             $programId->toString()
         );
 
-        // TODO (2018-06-20 17:44 by Gildas): How to handle command validation
         $commandBus->dispatch($command);
 
         // TODO (2018-06-20 17:43 by Gildas): How to set status code
