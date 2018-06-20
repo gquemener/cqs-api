@@ -12,7 +12,7 @@ App\Acme\Domain\Program\Participant:
             type: string
             length: 36
 
-    manyToMany:
+    manyToOne:
         program:
             targetEntity: App\Acme\Domain\Program\Program
             inversedBy: participants

@@ -14,25 +14,17 @@ use App\Acme\Application\Command\JoinProgram;
 
 final class Program
 {
-    public function index(Domain\ProgramRepository $repository): Response
+    public function index(Domain\ProgramRepository $repository): array
     {
-        $programs = $repository->findAll();
-
-        return new JsonResponse($programs);
+        return $repository->findAll();
     }
 
-    public function show(string $id, Domain\ProgramRepository $repository): Response
+    public function show(string $id, Domain\ProgramRepository $repository): ?Domain\Program
     {
-        $program = $repository->get(Domain\ProgramId::fromString($id));
-
-        return new JsonResponse([
-            'id' => (string) $program->programId(),
-            'description' => $program->description(),
-            'maxParticipants' => $program->maxParticipants(),
-        ]);
+        return $repository->get(Domain\ProgramId::fromString($id));
     }
 
-    public function create(Request $request, CommandBus $commandBus): Response
+    public function create(Request $request, CommandBus $commandBus): array
     {
         $programId = Domain\ProgramId::generate();
 
@@ -42,20 +34,22 @@ final class Program
             $programId->toString()
         );
 
+        // TODO (2018-06-20 17:44 by Gildas): How to handle command validation
         $commandBus->dispatch($command);
 
-        return new Response($programId->toString(), 201);
+        // TODO (2018-06-20 17:43 by Gildas): How to set status code
+        return [
+            'id' => $programId->toString(),
+        ];
     }
 
-    public function join(string $id, Request $request, CommandBus $commandBus): Response
+    public function join(string $id, Request $request, CommandBus $commandBus): void
     {
         $command = JoinProgram::create(
-            $request->request->get('user_id'),
+            $request->request->get('user_id'), // Could be fetched from the security context when security layer is implemented
             $id
         );
 
         $commandBus->dispatch($command);
-
-        return new Response('', 200);
     }
 }

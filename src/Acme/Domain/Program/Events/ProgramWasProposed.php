@@ -7,7 +7,7 @@ namespace App\Acme\Domain\Program\Events;
 use App\DomainEvent\Event;
 use App\Acme\Domain\Program\ProgramId;
 
-final class ProgramCreated extends Event
+final class ProgramWasProposed extends Event
 {
     public function id(): ProgramId
     {

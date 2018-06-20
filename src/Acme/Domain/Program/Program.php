@@ -11,7 +11,7 @@ use App\Acme\Domain\Program\Events;
 use App\Acme\Domain\User\User;
 use App\Acme\Domain\User\UserId;
 
-final class Program implements DomainEvent\Provider
+final class Program implements DomainEvent\Provider, \JsonSerializable
 {
     use DomainEvent\RecordEvents;
 
@@ -27,11 +27,6 @@ final class Program implements DomainEvent\Provider
         $this->maxParticipants = $maxParticipants;
         $this->participants = new ArrayCollection();
 
-        $this->record(new Events\ProgramCreated([
-            'id' => $this->id,
-            'description' => $this->description,
-            'max_partipants' => $this->maxParticipants,
-        ]));
     }
 
     public function id(): ProgramId
@@ -56,7 +51,14 @@ final class Program implements DomainEvent\Provider
 
     public static function propose(ProgramId $programId, string $description, int $maxParticipants)
     {
-        return new self($programId, $description, $maxParticipants);
+        $self = new self($programId, $description, $maxParticipants);
+        $self->record(new Events\ProgramWasProposed([
+            'id' => $self->id,
+            'description' => $self->description,
+            'max_partipants' => $self->maxParticipants,
+        ]));
+
+        return $self;
     }
 
     public function addParticipant(UserId $userId): void
@@ -72,5 +74,14 @@ final class Program implements DomainEvent\Provider
         if (count($this->participants) >= $this->maxParticipants) {
             throw new \RuntimeException(sprintf('Program "%s" is full', $this->programId()));
         }
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id()->toString(),
+            'description' => $this->description(),
+            'maxParticipants' => $this->maxParticipants(),
+        ];
     }
 }

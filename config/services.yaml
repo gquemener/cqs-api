@@ -1,6 +1,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -15,7 +16,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{Acme/Application,Kernel.php}'
+        exclude: '../src/{Acme/Application,Prooph,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -28,4 +29,15 @@ services:
     App\DomainEvent\Dispatcher\Doctrine:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postLoad }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: postRemove }
             - { name: doctrine.event_listener, event: postFlush }
+
+    App\Acme\Application\EventListener\:
+        resource: '../src/Acme/Application/EventListener'
+        tags: ['kernel.event_subscriber']
+
+    App\Prooph\CommandValidationPlugin:
+        tags:
+            - { name: 'prooph_service_bus.default_command_bus.plugin' }
