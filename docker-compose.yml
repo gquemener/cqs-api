@@ -3,7 +3,6 @@ version: '2'
 services:
     web:
         image: prooph/php:7.2-cli-xdebug
-        user: "$UID"
         volumes:
             - './:/data'
         ports:

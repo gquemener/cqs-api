@@ -3,23 +3,32 @@
 You must first install dependencies using composer:
 
 ```
-$ docker run --rm -ti -v "$PWD":/app --user "$(id -u):$(id -g)" -w /app composer
+$ make install
 ```
 
-Then start the docker services with:
+Then update (if necessary) parameters in the `.env` file.
+
+And start the services using:
 
 ```
-$ docker-compose up -d
+$ make start
 ```
 
-And setup the database schema using:
+Setup the database schema using:
 
 ```
-$ docker-compose exec web bin/console doctrine:schema:create
+$ make setup_db
 ```
 
-You're all set to browse the api on `http://localhost:8080`.
+And you're all set to browse the api on `http://localhost:8080`.
 
+# Tests
+
+Run tests using:
+
+```
+make test
+```
 
 # Directories structure
 
