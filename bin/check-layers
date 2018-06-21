@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mapfile -t RESULTS < <(grep -Rn "^use.*Application" src/Acme/Domain)
+mapfile -t DATA < <(grep -Rn "^use.*Infrastructure" src/Acme/Domain)
+RESULTS=("${RESULTS[@]}" "${DATA[@]}")
+mapfile -t DATA < <(grep -Rn "^use.*Infrastructure" src/Acme/Application)
+RESULTS=("${RESULTS[@]}" "${DATA[@]}")
+
+if [ "${#RESULTS[@]}" -gt 0 ]; then
+    echo "The following ${#RESULTS[@]} use statement break the 3-layers rule:"
+    printf '  - %s\n' "${RESULTS[@]}"
+    exit 1
+fi
+
+echo "The 3-layers rule is respected."
+exit 0
