@@ -4,25 +4,19 @@ declare (strict_types = 1);
 
 namespace App\Tests\Functionnal\Program;
 
-use App\Tests\Functionnal\TestCase;
-use App\Acme\Domain\Program\ProgramRepository;
-use function GuzzleHttp\json_decode;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Acme\Domain\Program\Program;
-use App\Acme\Domain\Program\ProgramId;
+use App\Acme\Domain\Program;
+use App\Tests\Functionnal\ResetDatabase;
+use App\Tests\Functionnal\TestCase;
+use function GuzzleHttp\json_decode;
 
 final class ListAllProgramsTest extends TestCase
 {
-    /**
-     * @var EntityManagerInterface
-     * @inject
-     */
-    private $em;
+    use ResetDatabase;
 
     /**
-     * @var ProgramRepository
+     * @var Program\ProgramRepository
      * @inject
      */
     private $repository;
@@ -30,8 +24,6 @@ final class ListAllProgramsTest extends TestCase
     /** @test */
     public function everyone_can_access_all_programs()
     {
-        $this->setupDatabase($this->em);
-
         $response = $this->httpClient->request('GET', '/');
         $data = json_decode((string) $response->getBody(), true);
 
@@ -41,8 +33,6 @@ final class ListAllProgramsTest extends TestCase
     /** @test */
     public function everyone_can_propose_a_program()
     {
-        $this->setupDatabase($this->em);
-
         $response = $this->httpClient->request('POST', '/', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -55,18 +45,18 @@ final class ListAllProgramsTest extends TestCase
         $data = json_decode((string) $response->getBody(), true);
 
         $this->assertNotNull(
-            $this->repository->get(ProgramId::fromString($data['id']))
+            $this->repository->get(Program\ProgramId::fromString($data['id']))
         );
     }
 
-    public function getFixture(): ?FixtureInterface
+    protected function getFixture(): ?FixtureInterface
     {
         return new class() implements FixtureInterface
         {
             public function load(ObjectManager $manager)
             {
-                $manager->persist(Program::propose(ProgramId::generate(), 'An awesome program', 2));
-                $manager->persist(Program::propose(ProgramId::generate(), 'An other program', 1));
+                $manager->persist(Program\Program::propose(Program\ProgramId::generate(), 'An awesome program', 2));
+                $manager->persist(Program\Program::propose(Program\ProgramId::generate(), 'An other program', 1));
                 $manager->flush();
             }
         };

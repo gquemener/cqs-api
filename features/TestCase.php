@@ -18,15 +18,10 @@ abstract class TestCase extends BaseTestCase implements ServiceContainerTestCase
 {
     use SymfonyTestContainer;
 
-    /**
-     * @var EntityManagerInterface
-     * @inject
-     */
-    private $repository;
-
     public function setUp(): void
     {
         $this->setupHttpClient();
+        $this->setupDatabase();
     }
 
     private function setupHttpClient(): void
@@ -36,9 +31,13 @@ abstract class TestCase extends BaseTestCase implements ServiceContainerTestCase
         ]);
     }
 
-    protected function setupDatabase(EntityManagerInterface $em): void
+    protected function setupDatabase(): void
     {
-        $purger = new ORMPurger($em);
+        if (!$this->em) {
+            return;
+        }
+
+        $purger = new ORMPurger($this->em);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
 
         $purger->purge();
@@ -47,10 +46,8 @@ abstract class TestCase extends BaseTestCase implements ServiceContainerTestCase
             $loader = new Loader();
             $loader->addFixture($fixture);
 
-            $executor = new ORMExecutor($em, $purger);
+            $executor = new ORMExecutor($this->em, $purger);
             $executor->execute($loader->getFixtures());
         }
     }
-
-    abstract public function getFixture(): ?FixtureInterface;
 }
