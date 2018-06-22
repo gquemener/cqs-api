@@ -19,6 +19,7 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
     private $description;
     private $maxParticipants;
     private $participants;
+    private $createdAt;
 
     private function __construct(ProgramId $id, string $description, int $maxParticipants)
     {
@@ -26,7 +27,7 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
         $this->description = $description;
         $this->maxParticipants = $maxParticipants;
         $this->participants = new ArrayCollection();
-
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function id(): ProgramId
@@ -61,19 +62,19 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
         return $self;
     }
 
-    public function addParticipant(UserId $userId): void
+    public function addParticipant(UserId $userId, \DateTimeImmutable $at): void
     {
-        $participant = new Participant($this, $userId);
-        $this->participants->add($participant);
-        return;
+        $participant = new Participant($this, $userId, $at);
 
         if ($this->participants->contains($participant)) {
-            throw new \RuntimeException(sprintf('User "%s" is already participating to this program', $user->userId()));
+            throw new \RuntimeException(sprintf('User "%s" is already participating to this program', $user->id()));
         }
 
         if (count($this->participants) >= $this->maxParticipants) {
-            throw new \RuntimeException(sprintf('Program "%s" is full', $this->programId()));
+            throw new \RuntimeException(sprintf('Program "%s" is full', $this->id()));
         }
+
+        $this->participants->add($participant);
     }
 
     public function jsonSerialize(): array
@@ -82,6 +83,7 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
             'id' => $this->id()->toString(),
             'description' => $this->description(),
             'maxParticipants' => $this->maxParticipants(),
+            'createdAt' => $this->createdAt,
         ];
     }
 }

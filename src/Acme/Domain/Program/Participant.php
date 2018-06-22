@@ -11,11 +11,13 @@ final class Participant
     private $id;
     private $program;
     private $userId;
+    private $at;
 
-    public function __construct(Program $program, UserId $userId)
+    public function __construct(Program $program, UserId $userId, \DateTimeImmutable $at)
     {
         $this->program = $program;
         $this->userId = $userId->toString();
+        $this->at = $at;
     }
 
     public function program(): Program
@@ -26,5 +28,10 @@ final class Participant
     public function userId(): UserId
     {
         return UserId::fromString($this->userId);
+    }
+
+    public function at(): \DateTimeImmutable
+    {
+        return $this->at;
     }
 }

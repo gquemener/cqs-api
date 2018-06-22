@@ -11,6 +11,8 @@ App\Acme\Domain\Program\Participant:
         userId:
             type: string
             length: 36
+        at:
+            type: datetime
 
     manyToOne:
         program:

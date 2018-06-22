@@ -45,8 +45,9 @@ final class Program
     public function join(string $id, Request $request, CommandBus $commandBus): void
     {
         $command = JoinProgram::create(
-            $request->request->get('user_id'), // Could be fetched from the security context when security layer is implemented
-            $id
+            $request->request->get('userId', ''),
+            $id,
+            $request->request->get('date', '')
         );
 
         $commandBus->dispatch($command);

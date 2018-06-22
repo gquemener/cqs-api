@@ -19,16 +19,22 @@ final class JoinProgramHandler
 
     public function __invoke(JoinProgram $command): void
     {
-        if (null === $user = $this->userRepository->get($command->userId())) {
+        $userId = Domain\User\UserId::fromString($command->userId());
+        if (null === $user = $this->userRepository->get($userId)) {
             throw new \RuntimeException(sprintf('User "%s" not found', $command->userId()));
         }
 
-        if (null === $program = $this->programRepository->get($command->programId())) {
-            throw new \RuntimeException('Program not found');
+        $programId = Domain\Program\ProgramId::fromString($command->programId());
+        if (null === $program = $this->programRepository->get($programId)) {
+            throw new \RuntimeException(sprintf('Program "%s" not found', $command->programId()));
         }
 
         $program->addParticipant(
-            $user->id()
+            $user->id(),
+            \DateTimeImmutable::createFromFormat(
+                \DateTime::ISO8601,
+                $command->date()
+            )
         );
 
         $this->programRepository->update($program);

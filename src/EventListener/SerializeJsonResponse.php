@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Prooph\ServiceBus\Exception\MessageDispatchException;
 use App\Prooph\InvalidCommandException;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\HttpFoundation\Request;
 
 final class SerializeJsonResponse implements EventSubscriberInterface
 {
@@ -50,7 +52,9 @@ final class SerializeJsonResponse implements EventSubscriberInterface
     private function createJsonResponse($data, int $statusCode): Response
     {
         if (null !== $data) {
-            $data = $this->serializer->serialize($data, 'json');
+            $data = $this->serializer->serialize($data, 'json', [
+                DateTimeNormalizer::FORMAT_KEY => \DateTime::ISO8601,
+            ]);
         }
 
         return new Response(

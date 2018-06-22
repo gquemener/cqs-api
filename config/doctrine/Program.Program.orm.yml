@@ -13,6 +13,8 @@ App\Acme\Domain\Program\Program:
             type: text
         maxParticipants:
             type: integer
+        createdAt:
+            type: datetime
 
     oneToMany:
         participants:
