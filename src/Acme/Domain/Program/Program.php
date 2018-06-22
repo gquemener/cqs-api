@@ -84,6 +84,7 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
             'description' => $this->description(),
             'maxParticipants' => $this->maxParticipants(),
             'createdAt' => $this->createdAt,
+            'participants' => $this->participants(),
         ];
     }
 }

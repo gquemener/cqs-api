@@ -6,7 +6,7 @@ namespace App\Acme\Domain\Program;
 
 use App\Acme\Domain\User\UserId;
 
-final class Participant
+final class Participant implements \JsonSerializable
 {
     private $id;
     private $program;
@@ -33,5 +33,13 @@ final class Participant
     public function at(): \DateTimeImmutable
     {
         return $this->at;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'userId' => $this->userId()->toString(),
+            'at' => $this->at,
+        ];
     }
 }
