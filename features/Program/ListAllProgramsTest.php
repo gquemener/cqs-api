@@ -22,31 +22,17 @@ final class ListAllProgramsTest extends TestCase
     private $repository;
 
     /** @test */
-    public function everyone_can_access_all_programs()
+    public function as_a_client_list_only_my_programs()
     {
-        $response = $this->httpClient->request('GET', '/');
-        $data = json_decode((string) $response->getBody(), true);
+        $response = $this->httpClient->request('GET', '/programs', [
+            'Authorization' => 'Bearer client_token',
+        ]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $data = json_decode((string) $response->getBody());
 
         $this->assertCount(2, $data);
-    }
-
-    /** @test */
-    public function everyone_can_propose_a_program()
-    {
-        $response = $this->httpClient->request('POST', '/', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'description' => 'Stress Management',
-                'maxParticipants' => 2,
-            ]
-        ]);
-        $data = json_decode((string) $response->getBody(), true);
-
-        $this->assertNotNull(
-            $this->repository->get(Program\ProgramId::fromString($data['id']))
-        );
+        $this->assertValidJson($data, 'programs.json');
     }
 
     protected function getFixture(): ?FixtureInterface
@@ -55,8 +41,31 @@ final class ListAllProgramsTest extends TestCase
         {
             public function load(ObjectManager $manager)
             {
-                $manager->persist(Program\Program::propose(Program\ProgramId::generate(), 'An awesome program', 2));
-                $manager->persist(Program\Program::propose(Program\ProgramId::generate(), 'An other program', 1));
+                $entities = [];
+                $bob = $entities[] = Client::register('bob');
+                $alice = $entities[] = Client::register('alice');
+                $entities[] = $bob->proposeProgram(
+                    Domain\ProgramType::trainAndCoach(),
+                    new Domain\ProgramCategory('Happiness'),
+                    'Put a smile on these faces',
+                    'Lorem ipsum dolor sit amet'
+                );
+                $entities[] = $bob->proposeProgram(
+                    Domain\ProgramType::trainAndDev(),
+                    new Domain\ProgramCategory('Stress'),
+                    'Remove stress from coffee machine',
+                    'Lorem ipsum dolor sit amet'
+                );
+                $entities[] = $alice->proposeProgram(
+                    Domain\ProgramType::trainAndDev(),
+                    new Domain\ProgramCategory('Language'),
+                    'Working with martians',
+                    'Lorem ipsum dolor sit amet'
+                );
+
+                foreach ($entities as $entity) {
+                    $manager->persist($entity);
+                }
                 $manager->flush();
             }
         };

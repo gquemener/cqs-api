@@ -1,4 +1,4 @@
-App\Acme\Domain\User\User:
+App\Acme\Domain\Client\Client:
     type: entity
 
     id:
@@ -7,3 +7,7 @@ App\Acme\Domain\User\User:
             length: 36
             generator:
                 strategy: NONE
+
+    fields:
+        name:
+            type: string

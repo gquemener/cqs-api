@@ -1,0 +1,16 @@
+App\Authentication\Domain\Token:
+    type: entity
+
+    id:
+        value:
+            type: string
+            length: 64
+            generator:
+                strategy: NONE
+
+    fields:
+        expiresAt:
+            type: datetime
+        ownerId:
+            type: string
+            length: 36

@@ -4,30 +4,40 @@ declare(strict_types=1);
 
 namespace App\Acme\Domain\Program;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use App\DomainEvent;
-use App\Acme\Domain\Program\Events;
-use App\Acme\Domain\User\User;
-use App\Acme\Domain\User\UserId;
 
 final class Program implements DomainEvent\Provider, \JsonSerializable
 {
     use DomainEvent\RecordEvents;
 
     private $id;
+    private $type;
+    private $category;
+    private $name;
     private $description;
-    private $maxParticipants;
-    private $participants;
-    private $createdAt;
 
-    private function __construct(ProgramId $id, string $description, int $maxParticipants)
-    {
+    private function __construct(
+        ProgramId $id,
+        ProgramType $type,
+        ProgramCategory $category,
+        string $name,
+        string $description
+    ) {
         $this->id = $id->toString();
+        $this->type = $type->value();
+        $this->category = $category->value();
+        $this->name = $name;
         $this->description = $description;
-        $this->maxParticipants = $maxParticipants;
-        $this->participants = new ArrayCollection();
-        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public static function define(
+        ProgramId $id,
+        ProgramType $type,
+        ProgramCategory $category,
+        string $name,
+        string $description
+    ): self {
+        return new self($id, $type, $category, $name, $description);
     }
 
     public function id(): ProgramId
@@ -35,56 +45,39 @@ final class Program implements DomainEvent\Provider, \JsonSerializable
         return ProgramId::fromString($this->id);
     }
 
+    public function type(): ProgramType
+    {
+        return ProgramType::fromValue($this->type);
+    }
+
+    public function category(): ProgramCategory
+    {
+        return new ProgramCategory($this->category);
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
     public function description(): string
     {
         return $this->description;
     }
 
-    public function maxParticipants(): int
+    public function createTrack(): Track
     {
-        return $this->maxParticipants;
-    }
-
-    public function participants(): array
-    {
-        return $this->participants->toArray();
-    }
-
-    public static function propose(ProgramId $programId, string $description, int $maxParticipants)
-    {
-        $self = new self($programId, $description, $maxParticipants);
-        $self->record(new Events\ProgramWasProposed([
-            'id' => $self->id,
-            'description' => $self->description,
-            'max_partipants' => $self->maxParticipants,
-        ]));
-
-        return $self;
-    }
-
-    public function addParticipant(UserId $userId, \DateTimeImmutable $at): void
-    {
-        $participant = new Participant($this, $userId, $at);
-
-        if ($this->participants->contains($participant)) {
-            throw new \RuntimeException(sprintf('User "%s" is already participating to this program', $user->id()));
-        }
-
-        if (count($this->participants) >= $this->maxParticipants) {
-            throw new \RuntimeException(sprintf('Program "%s" is full', $this->id()));
-        }
-
-        $this->participants->add($participant);
+        return new Track($this->id());
     }
 
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->id()->toString(),
+            'type' => $this->type()->value(),
+            'category' => $this->category()->value(),
+            'name' => $this->name(),
             'description' => $this->description(),
-            'maxParticipants' => $this->maxParticipants(),
-            'createdAt' => $this->createdAt,
-            'participants' => $this->participants(),
         ];
     }
 }

@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {},
+    "id": "http://moov.one/programs.json",
+    "type": "array",
+    "items": {
+        "$ref": "program.json"
+    }
+}

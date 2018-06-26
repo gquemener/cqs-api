@@ -1,0 +1,4 @@
+register_client:
+    path: /clients
+    methods: POST
+    controller: App\Controller\Client::create

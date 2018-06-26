@@ -6,11 +6,5 @@ namespace App\Acme\Domain\Program;
 
 interface ProgramRepository
 {
-    public function get(ProgramId $programId): ?Program;
-
-    public function findAll(): array;
-
-    public function add(Program $program): void;
-
-    public function update(Program $program): void;
+    public function all(): array;
 }

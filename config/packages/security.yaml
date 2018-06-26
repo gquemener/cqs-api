@@ -1,0 +1,47 @@
+security:
+    encoders:
+        App\Acme\Domain\Client\Client:
+            algorithm: argon2i
+            memory_cost: 1024
+            time_cost: 2
+            threads: 2
+
+    providers:
+        token:
+            id: App\Security\ClientTokenUserProvider
+        client:
+            id: App\Security\ClientLoginUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern: ^/login
+            guard:
+                provider: client
+                authenticators:
+                    - App\Security\LoginPasswordAuthenticator
+
+        main:
+            anonymous: true
+            stateless: true
+            guard:
+                provider: token
+                authenticators:
+                    - App\Security\TokenAuthenticator
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }

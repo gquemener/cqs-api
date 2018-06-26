@@ -28,6 +28,7 @@ abstract class TestCase extends BaseTestCase implements ServiceContainerTestCase
     {
         $this->httpClient = new \GuzzleHttp\Client([
             'base_uri' => 'http://localhost:8080',
+            'http_errors' => false,
         ]);
     }
 
@@ -49,5 +50,21 @@ abstract class TestCase extends BaseTestCase implements ServiceContainerTestCase
             $executor = new ORMExecutor($this->em, $purger);
             $executor->execute($loader->getFixtures());
         }
+    }
+
+    protected function assertValidJson($data, string $name): void
+    {
+        $validator = new \JsonSchema\Validator;
+        $validator->validate($data, (object)['$ref' => 'file://' . realpath(__DIR__.'/schemas/' . $name)]);
+
+        $toString = function(array $error): string
+        {
+            return print_r($error, true);
+        };
+
+        $this->assertTrue(
+            $validator->isValid(),
+            implode("\n", array_map($toString, $validator->getErrors()))
+        );
     }
 }

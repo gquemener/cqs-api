@@ -1,0 +1,20 @@
+App\Acme\Domain\Program\Program:
+    type: entity
+
+    id:
+        id:
+            type: string
+            length: 36
+            generator:
+                strategy: NONE
+
+    fields:
+        type:
+            type: integer
+            length: 1
+        category:
+            type: string
+        name:
+            type: string
+        description:
+            type: text

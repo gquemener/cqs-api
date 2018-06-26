@@ -15,6 +15,7 @@ use Prooph\ServiceBus\Exception\MessageDispatchException;
 use App\Prooph\InvalidCommandException;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\HttpFoundation\Request;
+use App\Controller\View;
 
 final class SerializeJsonResponse implements EventSubscriberInterface
 {
@@ -33,8 +34,13 @@ final class SerializeJsonResponse implements EventSubscriberInterface
 
     public function onKernelView(GetResponseForControllerResultEvent $event): void
     {
+        $result = $event->getControllerResult();
+        if (!$result instanceof View) {
+            return;
+        }
+
         $event->setResponse(
-            $this->createJsonResponse($event->getControllerResult(), 200)
+            $this->createJsonResponse($result->content(), $result->statusCode())
         );
     }
 
