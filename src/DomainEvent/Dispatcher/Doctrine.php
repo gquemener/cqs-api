@@ -4,20 +4,20 @@ declare (strict_types = 1);
 
 namespace App\DomainEvent\Dispatcher;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use App\DomainEvent\Provider;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Prooph\ServiceBus\EventBus;
 
 final class Doctrine
 {
-    private $dispatcher;
+    private $eventBus;
 
     private $entities = [];
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventBus $eventBus)
     {
-        $this->dispatcher = $dispatcher;
+        $this->eventBus = $eventBus;
     }
 
     public function postPersist(LifecycleEventArgs $event)
@@ -44,9 +44,11 @@ final class Doctrine
     {
         foreach ($this->entities as $entity) {
             foreach ($entity->popEvents() as $event) {
-                $this->dispatcher->dispatch($event->name(), $event);
+                $this->eventBus->dispatch($event);
             }
         }
+
+        $this->entities = [];
     }
 
     private function keepProvider(LifecycleEventArgs $event)

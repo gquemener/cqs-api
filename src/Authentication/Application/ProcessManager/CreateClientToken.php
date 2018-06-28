@@ -4,12 +4,11 @@ declare (strict_types = 1);
 
 namespace App\Authentication\Application\ProcessManager;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use App\Acme\Domain\Client\Events\ClientHasRegistered;
-use Prooph\ServiceBus\CommandBus;
 use App\Authentication\Application\Command\CreateToken;
+use Prooph\ServiceBus\CommandBus;
 
-final class CreateClientToken implements EventSubscriberInterface
+final class CreateClientToken
 {
     private $commandBus;
 
@@ -18,14 +17,7 @@ final class CreateClientToken implements EventSubscriberInterface
         $this->commandBus = $commandBus;
     }
 
-    public static function getSubscribedEvents()
-    {
-        return [
-            ClientHasRegistered::class => 'onClientHasRegistered',
-        ];
-    }
-
-    public function onClientHasRegistered(ClientHasRegistered $event): void
+    public function __invoke(ClientHasRegistered $event): void
     {
         $command = CreateToken::assignTo($event->clientId()->toString());
 

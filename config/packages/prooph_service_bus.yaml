@@ -1,23 +1,31 @@
 prooph_service_bus:
     command_buses:
         default_command_bus: ~
+    event_buses:
+        default_event_bus: ~
 
 services:
     _defaults:
         public: false
+        autowire: true
 
     Prooph\ServiceBus\CommandBus: '@prooph_service_bus.default_command_bus'
+    Prooph\ServiceBus\EventBus: '@prooph_service_bus.default_event_bus'
 
     acme_command_handlers:
         resource: '../../src/Acme/Application/CommandHandler/'
         namespace: App\Acme\Application\CommandHandler\
-        autowire: true
         tags:
             - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
 
     authentication_command_handlers:
         resource: '../../src/Authentication/Application/CommandHandler/'
         namespace: App\Authentication\Application\CommandHandler\
-        autowire: true
         tags:
             - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
+
+    authentication_process_managers:
+        resource: '../../src/Authentication/Application/ProcessManager/'
+        namespace: App\Authentication\Application\ProcessManager\
+        tags:
+            - { name: 'prooph_service_bus.default_event_bus.route_target', message_detection: true }

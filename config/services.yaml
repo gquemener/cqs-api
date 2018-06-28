@@ -20,11 +20,11 @@ services:
 
     App\Acme\:
         resource: '../src/Acme'
-        exclude: '../src/Acme/Application/CommandHandler'
+        exclude: '../src/Acme/Application'
 
     App\Authentication\:
         resource: '../src/Authentication'
-        exclude: '../src/Authentication/Application/CommandHandler'
+        exclude: '../src/Authentication/Application'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

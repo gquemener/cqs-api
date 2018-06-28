@@ -6,7 +6,7 @@ services:
         volumes:
             - './:/data'
         ports:
-            - '8080:8080'
+            - '8082:8080'
         working_dir: /data
         command: php -S 0.0.0.0:8080 -t public
 

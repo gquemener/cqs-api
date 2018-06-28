@@ -4,9 +4,9 @@ declare (strict_types = 1);
 
 namespace App\DomainEvent;
 
-use Symfony\Component\EventDispatcher\Event as BaseEvent;
+use Prooph\Common\Messaging\HasMessageName;
 
-class Event extends BaseEvent
+class Event implements HasMessageName
 {
     private $payload;
 
@@ -15,7 +15,7 @@ class Event extends BaseEvent
         $this->payload = $payload;
     }
 
-    public function name(): string
+    public function messageName(): string
     {
         return get_class($this);
     }
