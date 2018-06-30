@@ -9,9 +9,9 @@ use App\Acme\Domain\Client\ClientId;
 
 final class ClientHasRegistered extends Event
 {
-    public function clientId(): ClientId
+    public function clientId(): string
     {
-        return ClientId::fromString($this->payload()['id']);
+        return $this->payload()['id'];
     }
 
     public function login(): string

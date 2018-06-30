@@ -7,14 +7,20 @@ namespace App\Authentication\Application\CommandHandler;
 use App\Authentication\Application\Command\CreateCredentials;
 use App\Authentication\Domain\CredentialsRepository;
 use App\Authentication\Domain\Credentials;
+use Prooph\ServiceBus\EventBus;
+use App\Authentication\Domain\Events\CredentialsCreationFailed;
 
 final class CreateCredentialsHandler
 {
     private $repository;
+    private $eventBus;
 
-    public function __construct(CredentialsRepository $repository)
-    {
+    public function __construct(
+        CredentialsRepository $repository,
+        EventBus $eventBus
+    ) {
         $this->repository = $repository;
+        $this->eventBus = $eventBus;
     }
 
     public function __invoke(CreateCredentials $command): void
@@ -25,6 +31,10 @@ final class CreateCredentialsHandler
             $command->password()
         );
 
-        $this->repository->add($credentials);
+        try {
+            $this->repository->add($credentials);
+        } catch (\Exception $e) {
+            $this->eventBus->dispatch(CredentialsCreationFailed::withCredentials($credentials));
+        }
     }
 }

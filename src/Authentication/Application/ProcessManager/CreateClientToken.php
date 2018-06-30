@@ -19,7 +19,7 @@ final class CreateClientToken
 
     public function __invoke(ClientHasRegistered $event): void
     {
-        $command = CreateToken::assignTo($event->clientId()->toString());
+        $command = CreateToken::assignTo($event->clientId());
 
         $this->commandBus->dispatch($command);
     }

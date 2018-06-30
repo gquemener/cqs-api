@@ -18,6 +18,7 @@ final class DoctrineCredentialsRepository implements Domain\CredentialsRepositor
 
     public function add(Domain\Credentials $token): void
     {
+        throw new \Exception;
         $this->em->persist($token);
         $this->em->flush();
     }

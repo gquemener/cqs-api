@@ -113,12 +113,6 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
-    "phpspec/php-diff": {
-        "version": "v1.1.0"
-    },
-    "phpspec/phpspec": {
-        "version": "4.3.0"
-    },
     "phpspec/prophecy": {
         "version": "1.7.6"
     },
@@ -277,9 +271,6 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.8.0"
-    },
-    "symfony/process": {
-        "version": "v4.1.0"
     },
     "symfony/property-access": {
         "version": "v4.1.1"

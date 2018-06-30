@@ -24,6 +24,12 @@ services:
         tags:
             - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
 
+    acme_process_managers:
+        resource: '../../src/Acme/Application/ProcessManager/'
+        namespace: App\Acme\Application\ProcessManager\
+        tags:
+            - { name: 'prooph_service_bus.default_event_bus.route_target', message_detection: true }
+
     authentication_process_managers:
         resource: '../../src/Authentication/Application/ProcessManager/'
         namespace: App\Authentication\Application\ProcessManager\
