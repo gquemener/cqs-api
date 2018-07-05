@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -12,7 +12,7 @@ final class Programs extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 20; ++$i) {
             $program = Domain\Program::define(
                 Domain\ProgramId::generate(),
                 0 === $i % 2 ? Domain\ProgramType::trainAndCoach() : Domain\ProgramType::trainAndDev(),

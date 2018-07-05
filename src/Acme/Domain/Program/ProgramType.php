@@ -35,7 +35,7 @@ final class ProgramType
 
     public static function fromName(string $value): self
     {
-        if (! isset(self::OPTIONS[$value])) {
+        if (!isset(self::OPTIONS[$value])) {
             throw new \InvalidArgumentException('Unknown enum name given');
         }
 

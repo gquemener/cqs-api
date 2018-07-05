@@ -7,8 +7,6 @@ security:
             threads: 2
 
     providers:
-        token:
-            id: App\Security\ClientTokenUserProvider
         client:
             id: App\Security\ClientLoginUserProvider
 
@@ -17,20 +15,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern: ^/login
-            guard:
-                provider: client
-                authenticators:
-                    - App\Security\LoginPasswordAuthenticator
-
         main:
             anonymous: true
-            stateless: true
-            guard:
-                provider: token
-                authenticators:
-                    - App\Security\TokenAuthenticator
 
             # activate different ways to authenticate
 

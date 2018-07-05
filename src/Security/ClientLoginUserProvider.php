@@ -1,15 +1,12 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Security;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Authentication\Domain\TokenRepository;
 use App\Acme\Domain\Client\ClientRepository;
-use App\Authentication\Domain\TokenValue;
-use App\Acme\Domain\Client\ClientId;
 
 final class ClientLoginUserProvider implements UserProviderInterface
 {

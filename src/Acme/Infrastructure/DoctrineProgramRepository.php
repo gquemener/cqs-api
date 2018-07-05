@@ -1,12 +1,11 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Acme\Infrastructure;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Acme\Domain\Program as Domain;
-use App\Acme\Domain\Program\Program;
 use Doctrine\ORM\QueryBuilder;
 
 final class DoctrineProgramRepository implements Domain\ProgramRepository

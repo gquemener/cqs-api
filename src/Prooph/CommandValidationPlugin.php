@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Prooph;
 
@@ -24,7 +24,7 @@ final class CommandValidationPlugin extends AbstractPlugin
         if (!$messageBus instanceof CommandBus) {
             throw new \InvalidArgumentException(sprintf(
                 'This plugin can only be attached to an instance of "Prooph\ServiceBus\CommandBus", '
-                . 'received an instance of "%s"',
+                .'received an instance of "%s"',
                 get_class($messageBus)
             ));
         }

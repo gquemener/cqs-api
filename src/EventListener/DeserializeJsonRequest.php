@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\EventListener;
 
@@ -35,7 +35,7 @@ final class DeserializeJsonRequest implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 512]
+            KernelEvents::REQUEST => ['onKernelRequest', 512],
         ];
     }
 }

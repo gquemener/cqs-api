@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Security;
 
@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use App\Authentication\Domain\TokenValue;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -62,10 +61,10 @@ final class LoginPasswordAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $data = array(
+        $data = [
             'title' => 'Authentication Required',
             'detail' => '',
-        );
+        ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }

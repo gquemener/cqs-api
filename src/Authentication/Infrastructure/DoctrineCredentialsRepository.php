@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Authentication\Infrastructure;
 
@@ -18,7 +18,6 @@ final class DoctrineCredentialsRepository implements Domain\CredentialsRepositor
 
     public function add(Domain\Credentials $token): void
     {
-        throw new \Exception;
         $this->em->persist($token);
         $this->em->flush();
     }

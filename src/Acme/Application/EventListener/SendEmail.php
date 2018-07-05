@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Acme\Application\EventListener;
 
@@ -27,7 +27,7 @@ final class SendEmail implements EventSubscriberInterface
 
     public function onProgramCreated(ProgramCreated $event): void
     {
-        $this->dispatcher->addListener(KernelEvents::TERMINATE, function() {
+        $this->dispatcher->addListener(KernelEvents::TERMINATE, function () {
             // Let's send mail here once the http connection has been closed (work only with fpm)
         });
     }
